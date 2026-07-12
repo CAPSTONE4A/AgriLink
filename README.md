@@ -1,7 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # AgriLink
 Capstone Research
 =======
+=======
+>>>>>>> ddb6674137d530a0bcb96498d1866ed4193ef2ec
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -77,4 +80,7 @@ export default defineConfig([
 ])
 
 ```
+<<<<<<< HEAD
 >>>>>>> ddb6674 (First Commit)
+=======
+>>>>>>> ddb6674137d530a0bcb96498d1866ed4193ef2ec
