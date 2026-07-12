@@ -1,0 +1,26 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dsznajder.es7-react-js-snippets",
+    "ms-vscode.vscode-typescript-next",
+    "cweijan.vscode-postgresql-client2"
+  ]
+}
+
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dsznajder.es7-react-js-snippets",
+    "ms-vscode.vscode-typescript-next",
+    "supabase.postgres"
+  ]
+}
+
+terminal
+code --install-extension bradlc.vscode-tailwindcss
+code --install-extension esbenp.prettier-vscode
+code --install-extension dsznajder.es7-react-js-snippets
+code --install-extension ms-vscode.vscode-typescript-next
+code --install-extension cweijan.vscode-postgresql-client2
