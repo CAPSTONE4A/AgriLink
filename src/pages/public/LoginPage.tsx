@@ -1,25 +1,44 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
-
-const roleOptions = [
-  { value: 'farmer', label: 'Farmer' },
-  { value: 'buyer', label: 'Buyer/Supplier' },
-] as const
+import { useAuth, getDashboardPath } from '../../context/AuthContext'
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [identity, setIdentity] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState<typeof roleOptions[number]['value']>('buyer')
+  const [error, setError] = useState('')
   const navigate = useNavigate()
-  const { login } = useAuth()
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  useEffect(() => {
+    document.title = 'Login | AgriLink'
+  }, [])
+  const { login, loginDemo } = useAuth()
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const selectedRole = roleOptions.find((option) => option.value === role)
-    login({ name: `${selectedRole?.label || 'User'} Account`, role })
-    navigate(`/${role}/dashboard`, { replace: true })
+    setError('')
+
+    try {
+      const user = await login(identity, password)
+      const path = getDashboardPath(user.role)
+      navigate(path, { replace: true })
+    } catch (err) {
+      setError('Invalid credentials. Please check your phone/email and password.')
+      return
+    }
+  }
+
+  async function handleDemoLogin(role: 'farmer' | 'buyer') {
+    setError('')
+    const demoUser = {
+      id: 'demo-user',
+      name: role === 'farmer' ? 'Mang Romy' : 'Ate Linda',
+      role,
+      email: role === 'farmer' ? 'mangromy@example.com' : 'atelinda@example.com',
+    }
+    loginDemo(demoUser)
+    const path = getDashboardPath(role)
+    navigate(path, { replace: true })
   }
 
   return (
@@ -40,27 +59,9 @@ export default function LoginPage() {
             </div>
           </div>
           <p className="text-center text-sm text-slate-400">Log in to manage your farm, view marketplace updates, and chat with your AI advisor.</p>
-          <div className="mt-6 flex flex-col gap-3 rounded-[1.5rem] border border-slate-800/80 bg-slate-950/90 p-4 text-sm text-slate-300 sm:flex-row sm:items-center sm:justify-between">
-            <span className="font-semibold text-slate-200">Login as:</span>
-            <div className="flex gap-3">
-              {roleOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => setRole(option.value)}
-                  className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                    role === option.value
-                      ? 'bg-emerald-500 text-slate-950'
-                      : 'bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white'
-                  }`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
         </div>
         <form className="mt-6 space-y-6 rounded-[1.5rem] border border-slate-800/80 bg-slate-950/90 p-8" onSubmit={handleSubmit}>
+          {error && <p className="text-sm text-rose-400">{error}</p>}
           <label className="block text-sm font-semibold text-slate-200">
             Phone or Email
             <input
@@ -96,6 +97,22 @@ export default function LoginPage() {
           <button type="submit" className="btn btn-primary w-full">
             Log In
           </button>
+          <div className="relative py-2">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-700"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-slate-950 px-4 text-slate-400">Demo accounts</span>
+            </div>
+          </div>
+          <div className="grid gap-3">
+            <button type="button" onClick={() => handleDemoLogin('farmer')} className="btn btn-secondary w-full">
+              Demo Farmer Account
+            </button>
+            <button type="button" onClick={() => handleDemoLogin('buyer')} className="btn btn-secondary w-full">
+              Demo Buyer Account
+            </button>
+          </div>
           <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
             <span>or continue with</span>
           </div>

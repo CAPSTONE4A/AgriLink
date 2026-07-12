@@ -4,18 +4,27 @@ import LoginPage from './pages/public/LoginPage'
 import RegisterPage from './pages/public/RegisterPage'
 import BuyerDashboard from './pages/buyer/BuyerDashboard'
 import BuyerOrders from './pages/buyer/BuyerOrders'
+import BuyerProfilePage from './pages/buyer/BuyerProfilePage'
+import BuyerAdvisorPage from './pages/buyer/BuyerAdvisorPage'
 import FarmerDashboard from './pages/farmer/FarmerDashboard'
+import FarmerProfilePage from './pages/farmer/FarmerProfilePage'
+import FarmerWeatherPage from './pages/farmer/FarmerWeatherPage'
+import FarmerAdvisorPage from './pages/farmer/FarmerAdvisorPage'
+import MessagingPage from './pages/MessagingPage'
 import CooperativeDashboard from './pages/cooperative/CooperativeDashboard'
 import ExtensionDashboard from './pages/extension/ExtensionDashboard'
 import LenderDashboard from './pages/lender/LenderDashboard'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import MarketplacePage from './pages/MarketplacePage'
+import GuestDashboard from './pages/guest/GuestDashboard'
 import { AuthProvider, ProtectedRoute } from './context/AuthContext'
+import { NotificationProvider } from './context/NotificationContext'
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <NotificationProvider>
+      <AuthProvider>
+        <BrowserRouter>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -37,10 +46,42 @@ function App() {
             }
           />
           <Route
+            path="/buyer/profile"
+            element={
+              <ProtectedRoute allowedRoles={['buyer']}>
+                <BuyerProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/farmer/dashboard"
             element={
               <ProtectedRoute allowedRoles={['farmer']}>
                 <FarmerDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/profile"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/weather"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerWeatherPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/advisor"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerAdvisorPage />
               </ProtectedRoute>
             }
           />
@@ -77,10 +118,35 @@ function App() {
             }
           />
           <Route path="/marketplace" element={<MarketplacePage />} />
+          <Route
+            path="/guest/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['guest']}>
+                <GuestDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/buyer/advisor"
+            element={
+              <ProtectedRoute allowedRoles={['buyer']}>
+                <BuyerAdvisorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messaging"
+            element={
+              <ProtectedRoute allowedRoles={['farmer', 'buyer', 'cooperative']}>
+                <MessagingPage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </NotificationProvider>
   )
 }
 

@@ -1,10 +1,16 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useEffect } from 'react'
 import { MarketplaceCard } from '../components/MarketplaceCard'
 import { SectionHeading } from '../components/SectionHeading'
 import { marketplaceListings } from '../data/demoData'
+import { useNotify } from '../context/NotificationContext'
 
 export default function MarketplacePage() {
   const navigate = useNavigate()
+  const { notify } = useNotify()
+
+  useEffect(() => {
+    document.title = 'Marketplace | AgriLink'
+  }, [])
 
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
@@ -21,7 +27,7 @@ export default function MarketplacePage() {
               <button type="button" onClick={() => navigate(-1)} className="btn btn-secondary">
                 ← Back
               </button>
-              <button className="btn btn-primary">
+              <button type="button" onClick={() => notify('Post a listing is under development.', 'info')} className="btn btn-primary">
                 Post a listing
               </button>
             </div>

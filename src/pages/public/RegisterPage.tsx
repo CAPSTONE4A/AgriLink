@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../../context/AuthContext'
+import { useAuth, getDashboardPath } from '../../context/AuthContext'
+
+const roleOptions = [
+  { value: 'farmer', label: 'Farmer', description: 'Sell crops, manage farm listings, and track harvests.' },
+  { value: 'buyer', label: 'Buyer/Supplier', description: 'Browse marketplace, place orders, and manage procurement.' },
+] as const
 
 const formVariant = {
   hidden: (direction: number) => ({ opacity: 0, x: direction > 0 ? 80 : -80 }),
@@ -9,56 +14,32 @@ const formVariant = {
   exit: (direction: number) => ({ opacity: 0, x: direction < 0 ? 80 : -80 }),
 }
 
-const roleOptions = [
-  { value: 'farmer', label: 'Farmer' },
-  { value: 'buyer', label: 'Buyer/Supplier' },
-] as const
-
-const getRoleLabel = (role: typeof roleOptions[number]['value']) => roleOptions.find((option) => option.value === role)?.label ?? 'User'
-
-const roleDescription = (role: typeof roleOptions[number]['value']) => {
-  switch (role) {
-    case 'farmer':
-      return 'Farmers can list harvests, track farm operations, and connect directly with buyers.'
-    case 'buyer':
-      return 'Buyers and suppliers get a business procurement profile for marketplace orders and messaging.'
-    default:
-      return 'Create a specialized account for your role in AgriLink.'
-  }
-}
-
 export default function RegisterPage() {
-  const [accountType, setAccountType] = useState<typeof roleOptions[number]['value']>('buyer')
+  const navigate = useNavigate()
+  const { register } = useAuth()
   const [step, setStep] = useState(1)
   const [direction, setDirection] = useState(1)
+  const [accountType, setAccountType] = useState<typeof roleOptions[number]['value']>('farmer')
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState<string[]>([])
   const [formData, setFormData] = useState({
     username: '',
-    fullName: '',
     email: '',
     phone: '',
-    address: '',
     password: '',
+    fullName: '',
+    address: '',
     farmName: '',
     farmSize: '',
     crops: '',
     companyName: '',
     purchaseVolume: '',
     buyerType: 'Retail',
-    coopName: '',
-    memberCount: '',
-    sharedLandArea: '',
-    agencyName: '',
-    region: '',
-    advisoryFocus: '',
-    institutionName: '',
-    bankType: '',
-    adminUnit: '',
   })
 
-  const navigate = useNavigate()
-  const { login } = useAuth()
+  useEffect(() => {
+    document.title = 'Register | AgriLink'
+  }, [])
 
   const handleFieldChange = (field: string, value: string) => {
     setFormData((current) => ({ ...current, [field]: value }))
@@ -67,6 +48,7 @@ export default function RegisterPage() {
   const handleStepChange = (nextStep: number) => {
     setDirection(nextStep > step ? 1 : -1)
     setStep(nextStep)
+    setErrors([])
   }
 
   const handleBack = () => {
@@ -83,8 +65,10 @@ export default function RegisterPage() {
     if (step === 1) {
       if (!formData.username.trim()) validationErrors.push('Username is required.')
       if (!formData.email.trim()) validationErrors.push('Email is required.')
+      else if (!formData.email.includes('@')) validationErrors.push('Please enter a valid email address.')
       if (!formData.phone.trim()) validationErrors.push('Phone number is required.')
       if (!formData.password.trim()) validationErrors.push('Password is required.')
+      else if (formData.password.length < 6) validationErrors.push('Password must be at least 6 characters.')
     }
 
     if (step === 2) {
@@ -108,7 +92,7 @@ export default function RegisterPage() {
     return validationErrors
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const nextErrors = validateStep()
     if (nextErrors.length > 0) {
       setErrors(nextErrors)
@@ -122,11 +106,19 @@ export default function RegisterPage() {
       return
     }
 
-    login({ name: formData.fullName || formData.username || 'New User', role: accountType })
-    navigate(`/${accountType}/dashboard`, { replace: true })
+    try {
+      const user = await register(formData.email, formData.password, { full_name: formData.fullName || formData.username || 'New User', role: accountType })
+      const path = getDashboardPath(user.role)
+      navigate(path, { replace: true })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Registration failed. Please try again.'
+      setErrors([message])
+      return
+    }
   }
 
   const currentLabel = ['Account', 'Contact', 'Profile', 'Finish'][step - 1]
+  const selectedRole = roleOptions.find((option) => option.value === accountType)
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.16),_transparent_28%),linear-gradient(180deg,_#021112_0%,_#081821_100%)] px-4 sm:px-6 py-24 text-white">
@@ -175,15 +167,15 @@ export default function RegisterPage() {
               transition={{ duration: 0.28 }}
               className="mt-6 rounded-[1.75rem] border border-slate-800 bg-slate-900/95 p-8"
             >
-              <p className="text-sm text-slate-300">{roleDescription(accountType)}</p>
+              <p className="text-sm text-slate-300">{selectedRole?.description}</p>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-4">
                   <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Role</p>
-                  <p className="mt-3 text-lg font-semibold">{getRoleLabel(accountType)}</p>
+                  <p className="mt-3 text-lg font-semibold">{selectedRole?.label}</p>
                 </div>
                 <div className="rounded-3xl border border-slate-800 bg-slate-950/80 p-4">
                   <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Experience</p>
-                  <p className="mt-3 text-lg font-semibold">{roleDescription(accountType)}</p>
+                  <p className="mt-3 text-lg font-semibold">{step === 1 ? 'Getting started' : step === 2 ? 'Building profile' : step === 3 ? 'Finishing up' : 'Ready to launch'}</p>
                 </div>
               </div>
             </motion.div>
@@ -301,74 +293,9 @@ export default function RegisterPage() {
               {step === 3 && (
                 <section>
                   <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-400">
-                    Step 3: {getRoleLabel(accountType)} profile
+                    Step 3: {selectedRole?.label} profile
                   </p>
                   <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    {accountType === 'farmer' && (
-                      <>
-                        <label className="block text-sm text-slate-200">
-                          Farm name
-                          <input
-                            value={formData.farmName}
-                            onChange={(event) => handleFieldChange('farmName', event.target.value)}
-                            className="mt-3 input-field"
-                            placeholder="San Roque Farm"
-                          />
-                        </label>
-                        <label className="block text-sm text-slate-200">
-                          Farm size
-                          <input
-                            value={formData.farmSize}
-                            onChange={(event) => handleFieldChange('farmSize', event.target.value)}
-                            className="mt-3 input-field"
-                            placeholder="5 hectares"
-                          />
-                        </label>
-                        <label className="block text-sm text-slate-200 sm:col-span-2">
-                          Primary crops
-                          <input
-                            value={formData.crops}
-                            onChange={(event) => handleFieldChange('crops', event.target.value)}
-                            className="mt-3 input-field"
-                            placeholder="Rice, Corn, Vegetables"
-                          />
-                        </label>
-                      </>
-                    )}
-                    {accountType === 'buyer' && (
-                      <>
-                        <label className="block text-sm text-slate-200">
-                          Company / Buyer name
-                          <input
-                            value={formData.companyName}
-                            onChange={(event) => handleFieldChange('companyName', event.target.value)}
-                            className="mt-3 input-field"
-                            placeholder="Harvest Traders Inc."
-                          />
-                        </label>
-                        <label className="block text-sm text-slate-200">
-                          Purchase volume
-                          <input
-                            value={formData.purchaseVolume}
-                            onChange={(event) => handleFieldChange('purchaseVolume', event.target.value)}
-                            className="mt-3 input-field"
-                            placeholder="2000 kg / month"
-                          />
-                        </label>
-                        <label className="block text-sm text-slate-200 sm:col-span-2">
-                          Buyer type
-                          <select
-                            value={formData.buyerType}
-                            onChange={(event) => handleFieldChange('buyerType', event.target.value)}
-                            className="mt-3 w-full input-field bg-white"
-                          >
-                            <option value="Retail">Retail</option>
-                            <option value="Wholesale">Wholesale</option>
-                            <option value="Cooperative">Cooperative</option>
-                          </select>
-                        </label>
-                      </>
-                    )}
                     {accountType === 'farmer' && (
                       <>
                         <label className="block text-sm text-slate-200">
@@ -445,7 +372,7 @@ export default function RegisterPage() {
                   <div className="mt-6 space-y-4 rounded-3xl bg-slate-900/80 p-6 text-sm text-slate-300">
                     <div className="grid gap-2 sm:grid-cols-2">
                       <span className="font-semibold text-slate-100">Role</span>
-                      <span>{getRoleLabel(accountType)}</span>
+                      <span>{selectedRole?.label}</span>
                     </div>
                     <div className="grid gap-2 sm:grid-cols-2">
                       <span className="font-semibold text-slate-100">Username</span>

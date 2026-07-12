@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FeatureCard } from '../../components/FeatureCard'
 import { MarketplaceCard } from '../../components/MarketplaceCard'
 import { SectionHeading } from '../../components/SectionHeading'
 import { TestimonialCard } from '../../components/TestimonialCard'
 import { featureCards, landingStats, marketplaceListings, testimonials, trustPartners } from '../../data/demoData'
+import { useAuth } from '../../context/AuthContext'
+import { useNotify } from '../../context/NotificationContext'
 
 export default function LandingPage() {
   const [chatInput, setChatInput] = useState('')
@@ -13,6 +15,17 @@ export default function LandingPage() {
     { role: 'user', text: 'May mga sira sa palay ko. Ano ang dapat gawin?' },
     { role: 'ai', text: 'Base sa paglalarawan, maaaring ito ay Rice Blast. Iwasan ang sobrang pataba at panatilihing may mahusay na drainage.' },
   ])
+  const { loginGuest } = useAuth()
+  const { notify } = useNotify()
+
+  useEffect(() => {
+    document.title = 'AgriLink - Smart Farming Marketplace'
+  }, [])
+
+  function handleGuestLogin() {
+    loginGuest()
+    window.location.href = '/guest/dashboard'
+  }
 
   const handleSendMessage = () => {
     if (!chatInput.trim()) return
@@ -50,6 +63,9 @@ export default function LandingPage() {
             <a href="#about" className="transition hover:text-slate-900">About</a>
           </nav>
           <div className="flex items-center gap-3">
+            <button type="button" onClick={handleGuestLogin} className="rounded-full border border-emerald-700 px-5 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50">
+              Guest
+            </button>
             <Link to="/login" className="rounded-full border border-emerald-700 px-5 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50">
               Log In
             </Link>
@@ -137,18 +153,47 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-6">
           <SectionHeading title="Simple pricing" subtitle="Flexible plans for farmers, buyers, and cooperative teams." />
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {[
+              { name: 'Starter', price: 'Free', description: 'Basic farm tracking, marketplace browsing, and AI recommendations for smallholder farmers.', features: ['Marketplace access', 'Daily weather alerts', 'AI crop tips'] },
+              { name: 'Pro', price: '₱499 / mo', description: 'Advanced sourcing, verified supplier quotes, and cooperative finance tools.', features: ['Priority marketplace listings', 'Cooperative management', 'Budget monitoring'] },
+              { name: 'Enterprise', price: 'Contact us', description: 'Custom plans for cooperatives, buyers, and extension agencies with premium support.', features: ['Team onboarding', 'Workflow automation', 'Dedicated support'] },
+            ].map((plan) => (
+              <button
+                key={plan.name}
+                type="button"
+                onClick={() => notify('Plans are currently unavailable.', 'info')}
+                className="rounded-[2rem] bg-white p-8 text-left shadow-lg shadow-slate-200/60 hover:shadow-xl transition"
+              >
+                <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">{plan.name}</p>
+                <p className="mt-5 text-4xl font-semibold text-slate-950">{plan.price}</p>
+                <p className="mt-4 text-sm leading-7 text-slate-500">{plan.description}</p>
+                <ul className="mt-6 space-y-3 text-sm text-slate-600">
+                  {plan.features.map((feature) => (
+                    <li key={feature}>{feature}</li>
+                  ))}
+                </ul>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20" id="pricing">
+        <div className="mx-auto max-w-7xl px-6">
+          <SectionHeading title="Buyer plans" subtitle="Flexible plans for buyers and procurement teams." />
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
             <div className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60">
               <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Starter</p>
               <p className="mt-5 text-4xl font-semibold text-slate-950">Free</p>
-              <p className="mt-4 text-sm leading-7 text-slate-500">Basic farm tracking, marketplace browsing, and AI recommendations for smallholder farmers.</p>
+              <p className="mt-4 text-sm leading-7 text-slate-500">Browse marketplace, save listings, and receive price alerts.</p>
               <ul className="mt-6 space-y-3 text-sm text-slate-600">
-                <li>Marketplace access</li>
-                <li>Daily weather alerts</li>
-                <li>AI crop tips</li>
+                <li>Marketplace browsing</li>
+                <li>Saved listings</li>
+                <li>Price alerts</li>
               </ul>
             </div>
             <div className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60 ring-1 ring-emerald-200">
-              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Pro</p>
+              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Professional</p>
               <p className="mt-5 text-4xl font-semibold text-slate-950">₱499 / mo</p>
               <p className="mt-4 text-sm leading-7 text-slate-500">Advanced sourcing, verified supplier quotes, and cooperative finance tools.</p>
               <ul className="mt-6 space-y-3 text-sm text-slate-600">
@@ -200,56 +245,6 @@ export default function LandingPage() {
           <Link to="/marketplace" className="inline-flex rounded-full bg-amber-500 px-7 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-600">
             Browse All Listings →
           </Link>
-        </div>
-      </section>
-
-      <section className="bg-slate-950 px-6 py-20 text-white" id="roles">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading title="User roles and permissions" subtitle="Understand what each account type can do inside AgriLink." />
-          <div className="mt-10 grid gap-6 lg:grid-cols-2">
-            {[
-              {
-                title: 'Guest (unregistered)',
-                description:
-                  'Can browse public marketplace listings, weather info, and community feed read-only. Must register to message, order, post, or apply for a loan.',
-              },
-              {
-                title: 'Farmer',
-                description:
-                  'Full access — crop management, farm profile, marketplace buy/sell, loan & insurance applications, community posting. Requires mobile OTP verification at registration.',
-              },
-              {
-                title: 'Cooperative Member',
-                description:
-                  'All Farmer permissions, plus group-order placement, “Cooperative-shared” land ownership status, and shared cooperative loan applications.',
-              },
-              {
-                title: 'Buyer/Supplier',
-                description:
-                  'Business profile (DTI/SEC + TIN upload) instead of farm profile. Can browse, order, and message sellers. No access to crop-management or finance modules.',
-              },
-              {
-                title: 'Extension Worker',
-                description:
-                  'Read access to all farmer advisory data within their assigned region; can publish knowledge-base articles and respond to Expert Q&A. No access to individual farmers’ finance or transaction data.',
-              },
-              {
-                title: 'Lender (Partner Bank Rep)',
-                description:
-                  'Restricted to the Lender Dashboard — view/approve/decline loan applications and manage their institution’s portfolio. No access to crop, community, or marketplace modules.',
-              },
-              {
-                title: 'System Admin',
-                description:
-                  'Full oversight — approves ID/KYC verification, moderates community content, resolves marketplace disputes, and audits compliance logs. Cannot edit a user’s crop or financial records directly (view-only for those).',
-              },
-            ].map((role) => (
-              <div key={role.title} className="rounded-[2rem] border border-slate-800 bg-slate-900/90 p-6 shadow-sm">
-                <p className="text-sm uppercase tracking-[0.28em] text-emerald-400">{role.title}</p>
-                <p className="mt-4 text-sm leading-7 text-slate-300">{role.description}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
