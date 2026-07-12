@@ -1,4 +1,5 @@
-import { useNavigate, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { MarketplaceCard } from '../components/MarketplaceCard'
 import { SectionHeading } from '../components/SectionHeading'
 import { marketplaceListings } from '../data/demoData'
