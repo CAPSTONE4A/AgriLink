@@ -32,10 +32,9 @@ export default function BuyerOrders() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
-      <div className="mx-auto max-w-7xl">
-        <BuyerNav />
-
+    <main className="min-h-screen bg-slate-50 text-slate-900">
+      <BuyerNav />
+      <div className="mx-auto max-w-7xl px-6 py-10">
         <section className="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/80">
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -50,7 +49,9 @@ export default function BuyerOrders() {
               Create purchase request
             </button>
           </div>
+        </section>
 
+        <section className="mt-10 rounded-[2.5rem] bg-white p-8 shadow-xl shadow-slate-200/60">
           <div className="overflow-hidden rounded-3xl border border-slate-200">
             <div className="grid grid-cols-6 gap-0 bg-slate-100 px-6 py-4 text-xs uppercase tracking-[0.24em] text-slate-500">
               <span>Order</span>

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { ExtensionNav } from '../../components/ExtensionNav'
 import { SectionHeading } from '../../components/SectionHeading'
 import { useAuth } from '../../context/AuthContext'
 import { getExtensionProfile, getQuestions, getKnowledgeArticles } from '../../services/api'
@@ -21,17 +22,21 @@ export default function ExtensionDashboard() {
   })
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
-      <div className="mx-auto max-w-7xl">
+    <main className="min-h-screen bg-slate-50 text-slate-900">
+      <ExtensionNav />
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <ExtensionNav />
         <section className="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/80">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Extension Worker</p>
-            <h1 className="mt-4 text-4xl font-semibold text-slate-950">Advisory workspace for your assigned region.</h1>
-            <p className="mt-4 max-w-2xl text-slate-600">
-              {profile
-                ? `${profile.agency_name} · ${profile.region}, ${profile.municipality}, ${profile.province}${profile.specialization ? ` · ${profile.specialization}` : ''}`
-                : 'Access farmer advisory data, publish articles, and respond to expert Q&A without seeing private finance or transaction records.'}
-            </p>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Extension Worker</p>
+              <h1 className="mt-4 text-4xl font-semibold text-slate-950">Advisory workspace for your assigned region.</h1>
+              <p className="mt-4 max-w-2xl text-slate-600">
+                {profile
+                  ? `${profile.agency_name} · ${profile.region}, ${profile.municipality}, ${profile.province}${profile.specialization ? ` · ${profile.specialization}` : ''}`
+                  : 'Access farmer advisory data, publish articles, and respond to expert Q&A without seeing private finance or transaction records.'}
+              </p>
+            </div>
           </div>
         </section>
 

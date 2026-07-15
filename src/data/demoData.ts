@@ -1,7 +1,7 @@
 export const featureCards = [
   {
     id: 'ai-advisor',
-    title: 'AI Farm Advisor',
+    title: 'Ari',
     description: 'Get personalized crop guidance, pest diagnosis, and yield predictions.',
   },
   {
@@ -48,7 +48,8 @@ export const marketplaceListings = [
     price: '₱22.50/kg',
     quantity: '500 kg',
     badge: 'Hot',
-    image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=900&q=80',
+    category: 'Rice',
+    icon: 'Wheat',
   },
   {
     id: '2',
@@ -57,7 +58,8 @@ export const marketplaceListings = [
     price: '₱18.00/kg',
     quantity: '200 kg',
     badge: 'New',
-    image: 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=900&q=80',
+    category: 'Corn',
+    icon: 'Wheat',
   },
   {
     id: '3',
@@ -66,7 +68,8 @@ export const marketplaceListings = [
     price: '₱45.00/kg',
     quantity: '80 kg',
     badge: 'Organic',
-    image: 'https://images.unsplash.com/photo-1535914254981-b5012eebbd15?auto=format&fit=crop&w=900&q=80',
+    category: 'Tomato',
+    icon: 'Apple',
   },
   {
     id: '4',
@@ -75,7 +78,8 @@ export const marketplaceListings = [
     price: '₱35.00/kg',
     quantity: '150 kg',
     badge: 'Certified',
-    image: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?auto=format&fit=crop&w=900&q=80',
+    category: 'Vegetable',
+    icon: 'Leaf',
   },
 ]
 

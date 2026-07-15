@@ -14,6 +14,7 @@ export interface AuthUser {
 interface AuthContextValue {
   user: AuthUser | null
   loading: boolean
+  loggingOut: boolean
   login: (email: string, password: string) => Promise<AuthUser>
   loginDemo: (user: AuthUser) => void
   loginGuest: () => void
@@ -72,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     return true
   })
+  const [loggingOut, setLoggingOut] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -119,6 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user,
       loading,
+      loggingOut,
       async login(email: string, password: string): Promise<AuthUser> {
         if (!supabase) {
           const demoUser: AuthUser = {
@@ -200,12 +203,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return authUser
       },
       async logout() {
+        setLoggingOut(true)
         localStorage.removeItem('agrilink_user')
         if (supabase) {
           await supabase.auth.signOut()
         }
         setUser(null)
-        window.location.href = '/'
+        setTimeout(() => {
+          setLoggingOut(false)
+          window.location.replace('/')
+        }, 50)
       },
     }),
     [user, loading],
@@ -228,8 +235,12 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const { user, loading } = useAuth()
+  const { user, loading, loggingOut } = useAuth()
   const location = useLocation()
+
+  if (loggingOut) {
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center"><div className="text-sm text-slate-500">Signing out...</div></div>
+  }
 
   if (loading || !user) {
     return <Navigate to="/login" replace state={{ from: location }} />

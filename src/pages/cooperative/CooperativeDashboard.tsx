@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { CooperativeNav } from '../../components/CooperativeNav'
 import { SectionHeading } from '../../components/SectionHeading'
 import { useAuth } from '../../context/AuthContext'
 import { getCooperativeProfile, getLoanApplications } from '../../services/api'
@@ -19,6 +20,7 @@ export default function CooperativeDashboard() {
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
       <div className="mx-auto max-w-7xl">
+        <CooperativeNav />
         <section className="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/80">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div>

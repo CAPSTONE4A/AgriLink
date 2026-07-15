@@ -1,20 +1,18 @@
 import { Link } from 'react-router-dom'
 import { SectionHeading } from '../../components/SectionHeading'
+import { GuestNav } from '../../components/GuestNav'
 
 export default function GuestDashboard() {
   return (
     <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
       <div className="mx-auto max-w-7xl">
+        <GuestNav />
         <section className="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/80">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Guest Portal</p>
               <h1 className="mt-4 text-4xl font-semibold text-slate-950">Welcome to AgriLink</h1>
               <p className="mt-4 max-w-2xl text-slate-600">You are browsing as a guest. You can explore public content, but some features require registration.</p>
-            </div>
-            <div className="flex gap-3">
-              <Link to="/login" className="btn btn-primary">Log in</Link>
-              <Link to="/register" className="btn btn-secondary">Create account</Link>
             </div>
           </div>
         </section>

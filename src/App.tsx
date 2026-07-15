@@ -5,10 +5,13 @@ import RegisterPage from './pages/public/RegisterPage'
 import BuyerDashboard from './pages/buyer/BuyerDashboard'
 import BuyerOrders from './pages/buyer/BuyerOrders'
 import BuyerProfilePage from './pages/buyer/BuyerProfilePage'
-import BuyerAdvisorPage from './pages/buyer/BuyerAdvisorPage'
 import FarmerDashboard from './pages/farmer/FarmerDashboard'
 import FarmerProfilePage from './pages/farmer/FarmerProfilePage'
 import FarmerWeatherPage from './pages/farmer/FarmerWeatherPage'
+import FarmStatsPage from './pages/farmer/FarmStatsPage'
+import FarmerListingsPage from './pages/farmer/FarmerListingsPage'
+import FarmerOrdersPage from './pages/farmer/FarmerOrdersPage'
+import FarmerPlansPage from './pages/farmer/FarmerPlansPage'
 import FarmerAdvisorPage from './pages/farmer/FarmerAdvisorPage'
 import MessagingPage from './pages/MessagingPage'
 import CooperativeDashboard from './pages/cooperative/CooperativeDashboard'
@@ -78,6 +81,38 @@ function App() {
             }
           />
           <Route
+            path="/farmer/farm-stats"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmStatsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/listings"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerListingsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/orders"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerOrdersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/plans"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerPlansPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/farmer/advisor"
             element={
               <ProtectedRoute allowedRoles={['farmer']}>
@@ -123,14 +158,6 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['guest']}>
                 <GuestDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/buyer/advisor"
-            element={
-              <ProtectedRoute allowedRoles={['buyer']}>
-                <BuyerAdvisorPage />
               </ProtectedRoute>
             }
           />

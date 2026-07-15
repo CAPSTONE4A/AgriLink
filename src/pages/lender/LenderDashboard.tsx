@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { LenderNav } from '../../components/LenderNav'
 import { SectionHeading } from '../../components/SectionHeading'
 import { useAuth } from '../../context/AuthContext'
 import { getLenderProfile, getLoanApplications } from '../../services/api'
@@ -21,17 +22,21 @@ export default function LenderDashboard() {
   const totalAmount = loans.reduce((sum, l) => sum + Number(l.amount), 0)
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
-      <div className="mx-auto max-w-7xl">
+    <main className="min-h-screen bg-slate-50 text-slate-900">
+      <LenderNav />
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <LenderNav />
         <section className="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/80">
-          <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Lender Dashboard</p>
-            <h1 className="mt-4 text-4xl font-semibold text-slate-950">Manage loan applications and your partner portfolio.</h1>
-            <p className="mt-4 max-w-2xl text-slate-600">
-              {profile
-                ? `${profile.institution_name} · ${profile.institution_type} · ${profile.region}`
-                : 'Review, approve, or decline applications without access to farmers’ private crop or transaction details.'}
-            </p>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Lender Dashboard</p>
+              <h1 className="mt-4 text-4xl font-semibold text-slate-950">Manage loan applications and your partner portfolio.</h1>
+              <p className="mt-4 max-w-2xl text-slate-600">
+                {profile
+                  ? `${profile.institution_name} · ${profile.institution_type} · ${profile.region}`
+                   : 'Review, approve, or decline applications without access to farmers\' private crop or transaction details.'}
+              </p>
+            </div>
           </div>
         </section>
 

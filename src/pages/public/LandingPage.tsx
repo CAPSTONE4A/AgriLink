@@ -6,7 +6,6 @@ import { SectionHeading } from '../../components/SectionHeading'
 import { TestimonialCard } from '../../components/TestimonialCard'
 import { featureCards, landingStats, marketplaceListings, testimonials, trustPartners } from '../../data/demoData'
 import { useAuth } from '../../context/AuthContext'
-import { useNotify } from '../../context/NotificationContext'
 
 export default function LandingPage() {
   const [chatInput, setChatInput] = useState('')
@@ -16,7 +15,6 @@ export default function LandingPage() {
     { role: 'ai', text: 'Base sa paglalarawan, maaaring ito ay Rice Blast. Iwasan ang sobrang pataba at panatilihing may mahusay na drainage.' },
   ])
   const { loginGuest } = useAuth()
-  const { notify } = useNotify()
 
   useEffect(() => {
     document.title = 'AgriLink - Smart Farming Marketplace'
@@ -59,7 +57,6 @@ export default function LandingPage() {
           <nav className="hidden items-center gap-8 text-sm font-medium text-slate-700 md:flex">
             <a href="#features" className="transition hover:text-slate-900">Features</a>
             <Link to="/marketplace" className="transition hover:text-slate-900">Marketplace</Link>
-            <a href="#pricing" className="transition hover:text-slate-900">Pricing</a>
             <a href="#about" className="transition hover:text-slate-900">About</a>
           </nav>
           <div className="flex items-center gap-3">
@@ -149,73 +146,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="bg-slate-50 py-20" id="pricing">
-        <div className="mx-auto max-w-7xl px-6">
-          <SectionHeading title="Simple pricing" subtitle="Flexible plans for farmers, buyers, and cooperative teams." />
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {[
-              { name: 'Starter', price: 'Free', description: 'Basic farm tracking, marketplace browsing, and AI recommendations for smallholder farmers.', features: ['Marketplace access', 'Daily weather alerts', 'AI crop tips'] },
-              { name: 'Pro', price: '₱499 / mo', description: 'Advanced sourcing, verified supplier quotes, and cooperative finance tools.', features: ['Priority marketplace listings', 'Cooperative management', 'Budget monitoring'] },
-              { name: 'Enterprise', price: 'Contact us', description: 'Custom plans for cooperatives, buyers, and extension agencies with premium support.', features: ['Team onboarding', 'Workflow automation', 'Dedicated support'] },
-            ].map((plan) => (
-              <button
-                key={plan.name}
-                type="button"
-                onClick={() => notify('Plans are currently unavailable.', 'info')}
-                className="rounded-[2rem] bg-white p-8 text-left shadow-lg shadow-slate-200/60 hover:shadow-xl transition"
-              >
-                <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">{plan.name}</p>
-                <p className="mt-5 text-4xl font-semibold text-slate-950">{plan.price}</p>
-                <p className="mt-4 text-sm leading-7 text-slate-500">{plan.description}</p>
-                <ul className="mt-6 space-y-3 text-sm text-slate-600">
-                  {plan.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white py-20" id="pricing">
-        <div className="mx-auto max-w-7xl px-6">
-          <SectionHeading title="Buyer plans" subtitle="Flexible plans for buyers and procurement teams." />
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60">
-              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Starter</p>
-              <p className="mt-5 text-4xl font-semibold text-slate-950">Free</p>
-              <p className="mt-4 text-sm leading-7 text-slate-500">Browse marketplace, save listings, and receive price alerts.</p>
-              <ul className="mt-6 space-y-3 text-sm text-slate-600">
-                <li>Marketplace browsing</li>
-                <li>Saved listings</li>
-                <li>Price alerts</li>
-              </ul>
-            </div>
-            <div className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60 ring-1 ring-emerald-200">
-              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Professional</p>
-              <p className="mt-5 text-4xl font-semibold text-slate-950">₱499 / mo</p>
-              <p className="mt-4 text-sm leading-7 text-slate-500">Advanced sourcing, verified supplier quotes, and cooperative finance tools.</p>
-              <ul className="mt-6 space-y-3 text-sm text-slate-600">
-                <li>Priority marketplace listings</li>
-                <li>Cooperative management</li>
-                <li>Budget monitoring</li>
-              </ul>
-            </div>
-            <div className="rounded-[2rem] bg-white p-8 shadow-lg shadow-slate-200/60">
-              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Enterprise</p>
-              <p className="mt-5 text-4xl font-semibold text-slate-950">Contact us</p>
-              <p className="mt-4 text-sm leading-7 text-slate-500">Custom plans for cooperatives, buyers, and extension agencies with premium support.</p>
-              <ul className="mt-6 space-y-3 text-sm text-slate-600">
-                <li>Team onboarding</li>
-                <li>Workflow automation</li>
-                <li>Dedicated support</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section className="bg-slate-50 py-20">
         <div className="mx-auto max-w-7xl px-6">
           <div className="flex flex-col gap-4 rounded-[2rem] bg-white p-10 shadow-lg shadow-slate-200/60 md:flex-row md:items-center md:justify-between">
@@ -255,7 +185,7 @@ export default function LandingPage() {
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
               AI-Powered
             </span>
-            <h2 className="mt-8 text-4xl font-semibold">Meet Your AI Farm Advisor</h2>
+            <h2 className="mt-8 text-4xl font-semibold">Meet Ari, Your AI Farming Assistant</h2>
             <p className="mt-5 max-w-xl text-slate-300">
               Diagnose crop issues, get weather alerts, and receive yield predictions tailored for your farm. The advisor is built to help you make smart decisions faster.
             </p>
@@ -269,12 +199,12 @@ export default function LandingPage() {
           </div>
           <div className="rounded-[2rem] bg-slate-900/95 p-6 shadow-2xl shadow-slate-950/40">
             <div className="mb-6 rounded-3xl bg-slate-950 p-4 text-slate-300">
-              <p className="text-sm font-semibold text-white">AI Farm Advisor</p>
+              <p className="text-sm font-semibold text-white">Ari</p>
             </div>
             <div className="space-y-4">
               <div className="rounded-3xl bg-slate-800/90 p-5">
                 <p className="text-sm text-slate-400">AI</p>
-                <p className="mt-3 text-base leading-7 text-slate-100">Magandang araw! Ako ang iyong AI Farm Advisor. Paano kita matutulungan ngayon?</p>
+                <p className="mt-3 text-base leading-7 text-slate-100">Magandang araw! Ako si Ari, ang iyong AI farming assistant. Paano kita matutulungan ngayon?</p>
               </div>
               <div className="rounded-3xl bg-slate-700/90 p-5">
                 <p className="text-sm text-slate-400">User</p>
@@ -362,7 +292,6 @@ export default function LandingPage() {
             <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Company</p>
             <ul className="mt-5 space-y-3 text-sm text-slate-400">
               <li><a href="#about" className="transition hover:text-white">About</a></li>
-              <li><a href="#pricing" className="transition hover:text-white">Pricing</a></li>
               <li><a href="mailto:support@agrilink.ph" className="transition hover:text-white">Contact</a></li>
             </ul>
           </div>

@@ -58,24 +58,29 @@ export default function FarmerProfilePage() {
   const isLoading = profileLoading
 
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-10 text-slate-900">
-      <div className="mx-auto max-w-7xl">
-        <FarmerNav />
-        <section className="rounded-[2rem] bg-white p-8 shadow-xl shadow-slate-200/80">
+    <main className="min-h-screen bg-slate-50 text-slate-900">
+      <FarmerNav />
+      <div className="mx-auto max-w-7xl px-6 py-10">
+        <section className="rounded-[2rem] bg-gradient-to-br from-emerald-800 to-emerald-900 p-8 text-white shadow-xl">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-emerald-700">Farmer Profile</p>
-              <h1 className="mt-4 text-4xl font-semibold text-slate-950">
-                {isLoading ? 'Loading...' : baseProfile?.full_name || profile?.farm_name || 'My Farm Profile'}
-              </h1>
-              <p className="mt-4 max-w-2xl text-slate-600">
-                {isLoading ? 'Loading profile...' : 'Manage your personal information, farm details, subscription plan, and preferences.'}
-              </p>
+            <div className="flex items-center gap-5">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15 text-2xl font-semibold backdrop-blur-sm">
+                {isLoading ? '...' : (baseProfile?.full_name || profile?.farm_name || 'F').slice(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <p className="text-sm uppercase tracking-[0.3em] text-emerald-200">Farmer Profile</p>
+                <h1 className="mt-2 text-3xl font-semibold text-white">
+                  {isLoading ? 'Loading...' : baseProfile?.full_name || profile?.farm_name || 'My Farm Profile'}
+                </h1>
+                <p className="mt-2 text-sm text-emerald-100">
+                  {isLoading ? 'Loading profile...' : 'Manage your personal information, farm details, subscription plan, and preferences.'}
+                </p>
+              </div>
             </div>
             <button
               type="button"
               onClick={() => notify('Edit profile is under development.', 'info')}
-              className="inline-flex rounded-full bg-emerald-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800"
+              className="inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-900 transition hover:bg-emerald-50"
             >
               Edit Profile
             </button>
